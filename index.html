@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Carousel Overview — квіз2 / Personal Story</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #0e0d11;
+    color: #FFFFFF;
+    min-height: 100vh;
+    padding: 60px 40px 80px;
+  }
+
+  /* Декоративний glow */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -200px;
+    left: -200px;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(ellipse at center,
+      rgba(255, 106, 42, 0.10) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -300px;
+    right: -300px;
+    width: 900px;
+    height: 900px;
+    background: radial-gradient(ellipse at center,
+      rgba(140, 30, 60, 0.15) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  .header {
+    margin-bottom: 50px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #ff783c;
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    font-size: 42px;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin-bottom: 16px;
+  }
+
+  h1 .accent {
+    background: linear-gradient(135deg, #3E054D 0%, #E05A2A 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-top: 20px;
+  }
+
+  .meta-item {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .meta-item .label {
+    color: rgba(255, 255, 255, 0.4);
+    margin-right: 6px;
+  }
+
+  .meta-item .value {
+    color: #FFFFFF;
+    font-weight: 500;
+  }
+
+  /* Grid 3×3 */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    margin-bottom: 60px;
+  }
+
+  .slide-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .slide-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 30px 80px rgba(255, 120, 60, 0.20);
+    border-color: rgba(255, 120, 60, 0.30);
+  }
+
+  .slide-image-wrapper {
+    aspect-ratio: 9 / 16;
+    width: 100%;
+    background: #08070C;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .slide-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .slide-info {
+    padding: 18px 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .slide-num {
+    display: inline-block;
+    background: linear-gradient(135deg, #3E054D 0%, #E05A2A 100%);
+    color: #FFFFFF;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 100px;
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+  }
+
+  .slide-title {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1.3;
+    color: #FFFFFF;
+    margin-bottom: 6px;
+  }
+
+  .slide-type {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 0.03em;
+  }
+
+  /* Footer з статистикою */
+  .footer {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 20px;
+    padding: 32px 40px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .footer h2 {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  .stat {
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    border-left: 3px solid #ff783c;
+  }
+
+  .stat-value {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    font-size: 24px;
+    color: #FFFFFF;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .checklist {
+    margin-top: 20px;
+  }
+
+  .check-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .check-row::before {
+    content: '✓';
+    color: #ff783c;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .footer-files {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1.7;
+  }
+
+  .footer-files code {
+    font-family: 'SF Mono', Menlo, monospace;
+    background: rgba(255, 120, 60, 0.10);
+    color: #ff9966;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+
+    <header class="header">
+      <div class="eyebrow">Carousel Overview · 2026-05-08</div>
+      <h1>квіз2 — <span class="accent">Personal Story → Product</span></h1>
+      <div class="meta">
+        <div class="meta-item"><span class="label">Аудиторія:</span><span class="value">RU</span></div>
+        <div class="meta-item"><span class="label">Формат:</span><span class="value">9:16 (1080×1920)</span></div>
+        <div class="meta-item"><span class="label">Слайдів:</span><span class="value">9</span></div>
+        <div class="meta-item"><span class="label">Тип:</span><span class="value">manifesto + sales</span></div>
+        <div class="meta-item"><span class="label">CTA:</span><span class="value">AI-Business Screening</span></div>
+        <div class="meta-item"><span class="label">Hook:</span><span class="value">Цифра + страх ($1M+ в 2022)</span></div>
+      </div>
+    </header>
+
+    <div class="grid">
+
+      <a class="slide-card" href="slide-01.png" target="_blank">
+        <div class="slide-image-wrapper"><img src="slide-01.png" alt="Slide 1"></div>
+        <div class="slide-info">
+          <span class="slide-num">SLIDE 01</span>
+          <div class="slide-title">$1M+ в год — и я боялся выключить телефон</div>
+          <div class="slide-type">Hook · фото знизу + pill "2022"</div>
+        </div>
+      </a>
+
+      <a class="slide-card" href="slide-02.png" target="_blank">
+        <div class="slide-image-wrapper"><img src="slide-02.png" alt="Slide 2"></div>
+        <div class="slide-info">
+          <span class="slide-num">SLIDE 02</span>
+          <div class="slide-title">Снаружи — идеальный бизнес</div>
+          <div class="slide-type">List + Bubble · 4 чекмарки + цитата</div>
+        </div>
+      </a>
+
+      <a class="slide-card" href="slide-03.png" target="_blank">
+        <div class="slide-image-wrapper"><img src="slide-03.png" alt="Slide 3"></div>
+        <div class="slide-info">
+          <span class="slide-num">SLIDE 03</span>
+          <div class="slide-title">Мой день выглядел так — 50+ решений</div>
+          <div class="slide-type">Stat + Collage · 2 bubble</div>
+        </div>
+      </a>
+
+      <a class="slide-card" href="slide-04.png" target="_blank">
+        <div class="slide-image-wrapper"><img src="slide-04.png" alt="Slide 4"></div>
+        <div class="slide-info">
+          <span class="slide-num">SLIDE 04</span>
+          <div class="slide-title">Если я исчезну на 7 дней…</div>
+          <div class="slide-type">Photo + Bubble + Poll-UI</div>
+        </div>
+      </a>
+
+      <a class="slide-card" href="slide-05.png" target="_blank">
+        <div class="slide-image-wrapper"><img src="slide-05.png" alt="Slide 5"></div>
+        <div class="slide-info">
+          <span class="slide-num">SLIDE 05</span>
+          <div class="slide-title">Он бы остановился</div>
+          <div class="slide-type">Quote-only · бордовий фон</div>
+        </div>
+      </a>
+
+      <a class="slide-card" href="slide-06.png" target="_blank">
+        <div class="slide-image-wrapper"><img src="slide-06.png" alt="Slide 6"></div>
+        <div class="slide-info">
+          <span class="slide-num">SLIDE 06</span>
+          <div class="slide-title">Масштаб растет, а свобода исчезает</div>
+          <div class="slide-type">Photo full + Bubble overlay</div>
+        </div>
+      </a>
+
+      <a class="slide-card" href="slide-07.png" target="_blank">
+        <div class="slide-image-wrapper"><img src="slide-07.png" alt="Slide 7"></div>
+        <div class="slide-info">
+          <span class="slide-num">SLIDE 07</span>
+          <div class="slide-title">Проблема не в нише или рынке</div>
+          <div class="slide-type">Quote · "глаз замылен"</div>
+        </div>
+      </a>
+
+      <a class="slide-card" href="slide-08.png" target="_blank">
+        <div class="slide-image-wrapper"><img src="slide-08.png" alt="Slide 8"></div>
+        <div class="slide-info">
+          <span class="slide-num">SLIDE 08</span>
+          <div class="slide-title">AI-Business Screening — 10 минут</div>
+          <div class="slide-type">Photo + List + Pill + CTA-plate</div>
+        </div>
+      </a>
+
+      <a class="slide-card" href="slide-09.png" target="_blank">
+        <div class="slide-image-wrapper"><img src="slide-09.png" alt="Slide 9"></div>
+        <div class="slide-info">
+          <span class="slide-num">SLIDE 09</span>
+          <div class="slide-title">Стань архитектором своего бизнеса</div>
+          <div class="slide-type">CTA · карта приоритетов на 30 дней</div>
+        </div>
+      </a>
+
+    </div>
+
+    <footer class="footer">
+      <h2>Контроль якості</h2>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-value">9 / 9</div>
+          <div class="stat-label">Слайди згенеровано</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">~78%</div>
+          <div class="stat-label">Середнє попадання</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">9 / 9</div>
+          <div class="stat-label">Тестів TOV</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">0</div>
+          <div class="stat-label">Заборонених слів</div>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <div class="check-row">Кольорова консистенція по всіх слайдах: фон <code style="background:#0e0d11;color:#fff;border:1px solid rgba(255,255,255,.2);padding:1px 6px;border-radius:3px;font-size:12px">#0e0d11</code>, акцент <code style="background:#ff783c;color:#fff;padding:1px 6px;border-radius:3px;font-size:12px">#ff783c</code></div>
+        <div class="check-row">Шрифти: Manrope ExtraBold (заголовки) + Inter Medium/Regular (тіло)</div>
+        <div class="check-row">Реальні Figma SVG-ассети: check.svg, bubble-union.svg, arrow-curl.svg, arrow-zigzag.svg</div>
+        <div class="check-row">Структура наративу за content-playbook § 5.3 (manifesto+sales): hook → mirror → product → CTA</div>
+        <div class="check-row">Усі тексти безпосередньо з База знань (§ 11, рядок 1929 — "квіз2")</div>
+      </div>
+
+      <div class="footer-files">
+        <strong style="color:#fff;">Файли каруселі:</strong><br>
+        <code>carousels/2026-05-08_kviz2-personal-story/</code> — корінь<br>
+        <code>content.md</code> — spec + тексти всіх 9 слайдів<br>
+        <code>slide-NN.html</code> + <code>slide-NN.png</code> — джерело + рендер<br>
+        <code>expert-N.{jpeg,jpg,png}</code> — симлінки на фото з Expert photo/<br><br>
+        <strong style="color:#fff;">Брендбук:</strong><br>
+        <code>.claude/skills/al-brand/</code> — SKILL.md, brand-voice.md, brand-visual.md, content-playbook.md, master.css<br><br>
+        <strong style="color:#fff;">Регенерація:</strong><br>
+        <code>node render.js carousels/2026-05-08_kviz2-personal-story/</code>
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>
